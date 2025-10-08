@@ -41,4 +41,4 @@ home:
       damage: true
 ```
 
-report issues to [mail@tallenpeli.dev](mailto:mail@tallenpeli.dev).
+report issues to the github or [mail@tallenpeli.dev](mailto:mail@tallenpeli.dev).
