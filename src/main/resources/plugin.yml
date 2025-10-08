@@ -1,0 +1,4 @@
+name: server homes
+version: '1.0-Alpha'
+main: dev.tallenpeli.serverHomes.ServerHomes
+api-version: '1.21'
