@@ -2,7 +2,7 @@ A simple Spigot/Paper/Bukkit plugin to add essential home commands to your minec
 
 Use https://modrinth.com/mod/cardboard to get this working on fabric.
 
-![Server Homes Banner](https://cdn.modrinth.com/data/cached_images/b6c0311bbec7b62e3850210e89b1e4714607542b.png)
+![Server Homes Banner](https://cdn.modrinth.com/data/cached_images/c4ba370356e8c6fd7e26a2523a69d01e6733d7b2.png)
 
 ### Features
 - Configuration file for server admins to tweak settings
