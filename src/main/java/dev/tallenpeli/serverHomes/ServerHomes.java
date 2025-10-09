@@ -5,10 +5,12 @@ import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
 
-import java.io.File;
 import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
+
+// Add
+// - getPlayerConfig()
 
 public final class ServerHomes extends JavaPlugin {
     public record PendingAction(String commandLabel, String homeName) {
@@ -42,9 +44,11 @@ public final class ServerHomes extends JavaPlugin {
     public void onEnable() {
         this.saveDefaultConfig();
 
-        HomeTabCompleter tabCompleter = new HomeTabCompleter(new File(getDataFolder(), "playerdata"));
+        HomeManager homeManager = new HomeManager(this);
+        TeleportManager teleportManager = new TeleportManager(homeManager, this);
 
-        Commands commandHandler = new Commands(this);
+        HomeTabCompleter tabCompleter = new HomeTabCompleter(homeManager);
+        CommandHandler commandHandler = new CommandHandler(homeManager, teleportManager, this);
 
         // Register commands
         this.getCommand("home").setExecutor(commandHandler);
