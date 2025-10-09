@@ -58,6 +58,7 @@ public class Commands implements CommandExecutor {
             case "sethome" -> setHome(player, homeName, false);
             case "delhome" -> delHome(player, homeName, false);
             case "confirm" -> confirm(player);
+            case "cancel" -> cancel(player);
             case "home" -> teleportHome(player, homeName);
             default -> false;
         };
@@ -102,7 +103,7 @@ public class Commands implements CommandExecutor {
         boolean soundsEnabled = config.getBoolean("home.enable_sounds");
 
         BukkitTask teleportTask = new BukkitRunnable() {
-            private int remainingTime = delayTime;
+            private int remainingTime = player.hasPermission("tallenpeli.serverHomes.delay.bypass") ? 0 : delayTime;
             @Override
             public void run() {
                 if (!activeTeleports.containsKey(player.getUniqueId())) {
@@ -118,7 +119,8 @@ public class Commands implements CommandExecutor {
                     player.teleport(homeLocation);
                     player.sendMessage(String.format("§a✓ Teleported to §b%s§a!", homeName));
                     if (soundsEnabled) {
-                        player.playNote(currentLocation, Instrument.BELL, new Note(1, Note.Tone.A, false));
+                        // Call the player.getLocation() again because this location is updated after the teleport.
+                        player.playNote(player.getLocation(), Instrument.BELL, new Note(1, Note.Tone.A, false));
                     }
                     if (player.hasPermission("tallenpeli.serverHomes.cooldown.bypass")) {
                         return;
@@ -139,7 +141,7 @@ public class Commands implements CommandExecutor {
         return true;
     }
 
-    public boolean setHome(Player player, String homeName, Boolean isConfirmed) {
+    public boolean setHome(Player player, String homeName, boolean isConfirmed) {
         Location location = player.getLocation();
 
         File playerFile = getPlayerConfig(player);
@@ -148,7 +150,7 @@ public class Commands implements CommandExecutor {
         String homeBasePath = "home." + homeName;
 
         if (playerConfig.contains(homeBasePath) && !isConfirmed) {
-            player.sendMessage("§c⚠ A home named §e'" + homeName + "'§c already exists. Type §e/confirm§c to overwrite it.");
+            player.sendMessage("§c⚠ A home named §e'" + homeName + "'§c already exists. Type §e/confirm§c to overwrite, §e/cancel§c to cancel.");
             ServerHomes.PendingAction newAction = new ServerHomes.PendingAction("overrideHome", homeName);
             plugin.addPendingConfirmation(player.getUniqueId(), newAction);
             return true;
@@ -226,7 +228,7 @@ public class Commands implements CommandExecutor {
             World world = Bukkit.getWorld(worldName);
 
             if (world == null) {
-                player.sendMessage("§c✗ Your home world no longer exists!");
+                player.sendMessage("§cYour home world no longer exists!");
                 return null;
             }
 
@@ -253,7 +255,7 @@ public class Commands implements CommandExecutor {
         YamlConfiguration playerConfig = YamlConfiguration.loadConfiguration(playerFile);
 
         if (!isConfirmed) {
-            player.sendMessage(String.format("§c⚠ Are you sure you want to delete §e'%s'§c? Type §e/confirm§c to proceed.", homeName));
+            player.sendMessage(String.format("§c⚠ Are you sure you want to delete §e'%s'§c? Type §e/confirm§c to proceed, §e/cancel§c to cancel.", homeName));
             ServerHomes.PendingAction newAction = new ServerHomes.PendingAction("delhome", homeName);
             plugin.addPendingConfirmation(player.getUniqueId(), newAction);
         } else {
@@ -290,6 +292,19 @@ public class Commands implements CommandExecutor {
             }
         } else {
             player.sendMessage("§cYou have no pending confirmations.");
+        }
+        return true;
+    }
+
+    private boolean cancel(Player player) {
+        UUID playerUUID = player.getUniqueId();
+        Map<UUID, ServerHomes.PendingAction> confirmations = ServerHomes.getPendingConfirmations();
+
+        if (confirmations.containsKey(playerUUID)) {
+            confirmations.remove(playerUUID);
+            player.sendMessage("§a✓ Cancelled confirmation request.");
+        } else {
+            player.sendMessage("§cNo pending confirmation request.");
         }
         return true;
     }

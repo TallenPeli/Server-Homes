@@ -31,7 +31,7 @@ public final class ServerHomes extends JavaPlugin {
                     Player player = Bukkit.getPlayer(playerUUID);
 
                     if (player != null && player.isOnline()) {
-                        player.sendMessage("§c✗ §fConfirmation expired.");
+                        player.sendMessage("§cConfirmation expired.");
                     }
                 }
             }
@@ -52,6 +52,7 @@ public final class ServerHomes extends JavaPlugin {
         this.getCommand("sethome").setExecutor(commandHandler);
         this.getCommand("delhome").setExecutor(commandHandler);
         this.getCommand("confirm").setExecutor(commandHandler);
+        this.getCommand("cancel").setExecutor(commandHandler);
 
         // Register tab completers
         this.getCommand("home").setTabCompleter(tabCompleter);

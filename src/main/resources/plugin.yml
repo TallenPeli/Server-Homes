@@ -29,6 +29,11 @@ commands:
     usage: /confirm
     permission: tallenpeli.serverHomes.confirm
     permission-message: §cYou don't have permission to use the confirm command!
+  cancel:
+    description: Cancels a confirmation request
+    usage: /cancel
+    permission: tallenpeli.serverHomes.cancel
+    permission-message: §cYou don't have permission to use the cancel command!
 
 permissions:
   tallenpeli.serverHomes.home:
@@ -42,6 +47,9 @@ permissions:
     default: true
   tallenpeli.serverHomes.confirm:
     description: Confirm a home deletion.
+    default: true
+  tallenpeli.serverHomes.cancel:
+    description: Cancel a pending confirmation.
     default: true
   tallenpeli.serverHomes.homes:
     description: Lists all your homes.
