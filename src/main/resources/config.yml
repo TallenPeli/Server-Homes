@@ -16,8 +16,8 @@ home:
       movement: true
       damage: true
       attack: true
-      inventory: false
-      interact: true
+      inventory: false # Does not toggle when players open their own inventory, only chests, villagers, etc.
+      interact: false
 
   admin:
     allow_cross_world_teleportation: true

@@ -9,6 +9,8 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
+import org.bukkit.event.inventory.InventoryOpenEvent;
+import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.scheduler.BukkitTask;
 
@@ -72,6 +74,28 @@ public record EventListener(FileConfiguration config) implements Listener {
                 if (config.getBoolean("home.teleport.cancel_events.attack", true)) {
                     cancelTeleport(player, "you attacked");
                 }
+            }
+        }
+    }
+
+    @EventHandler
+    public void onInventoryOpen(InventoryOpenEvent event) {
+        final Player player = (Player) event.getPlayer();
+
+        if (TeleportManager.getActiveTeleports().containsKey(player.getUniqueId())) {
+            if (config.getBoolean("home.teleport.cancel_events.inventory", true)) {
+                cancelTeleport(player, "inventory opened");
+            }
+        }
+    }
+
+    @EventHandler
+    public void onInteract(PlayerInteractEvent event) {
+        final Player player = event.getPlayer();
+
+        if (TeleportManager.getActiveTeleports().containsKey(player.getUniqueId())) {
+            if (config.getBoolean("home.teleport.cancel_events.interact", true)) {
+                cancelTeleport(player, "interaction");
             }
         }
     }

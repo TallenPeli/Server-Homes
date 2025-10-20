@@ -1,16 +1,5 @@
 package dev.tallenpeli.serverHomes;
 
-// Add
-// - cooldowns
-// - activeTeleports
-// - teleportHome()
-// - addActiveTeleports
-// - getActiveTeleports()
-// - clearActiveTeleports() # for cleanup
-// - cancelTeleport()
-// - checkCooldown()
-// - setCooldown()
-
 import org.bukkit.Instrument;
 import org.bukkit.Location;
 import org.bukkit.Note;
