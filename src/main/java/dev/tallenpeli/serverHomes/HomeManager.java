@@ -61,12 +61,16 @@ public class HomeManager {
         }
 
         ConfigurationSection homeSection = playerConfig.getConfigurationSection("home");
-        final int homeCount = (homeSection != null) ? homeSection.getKeys(false).size() : 0;
-        final int maxHomes = config.getInt("home.max_homes", 1);
 
-        if (homeCount >= maxHomes && !isConfirmed) {
-            player.sendMessage("§cHome limit reached §7(" + maxHomes + " max)§c. Delete a home with §e/delhome <name>§c.");
-            return true;
+        // VIP players bypass home limits
+        if (!player.hasPermission("tallenpeli.serverHomes.vip")) {
+            final int homeCount = (homeSection != null) ? homeSection.getKeys(false).size() : 0;
+            final int maxHomes = config.getInt("home.max_homes", 1);
+
+            if (homeCount >= maxHomes && !isConfirmed) {
+                player.sendMessage("§cHome limit reached §7(" + maxHomes + " max)§c. Delete a home with §e/delhome <name>§c.");
+                return true;
+            }
         }
 
         playerConfig.set(homeBasePath + ".world", Objects.requireNonNull(location.getWorld()).getName());
@@ -76,7 +80,7 @@ public class HomeManager {
 
         try {
             playerConfig.save(playerFile);
-            player.sendMessage("§a✓ Home §b'" + homeName + "'§a has been saved!");
+            player.sendMessage("§a✔ Home §b'" + homeName + "'§a has been saved!");
             return true;
         } catch (IOException e) {
             plugin.getLogger().warning(String.format("Unable to save home for player %s", player.getName()));
@@ -134,7 +138,7 @@ public class HomeManager {
 
             try {
                 playerConfig.set(basePath, null);
-                player.sendMessage(String.format("§a✓ Home §b'%s'§a has been deleted.", homeName));
+                player.sendMessage(String.format("§a✔ Home §b'%s'§a has been deleted.", homeName));
                 playerConfig.save(playerFile);
             } catch (Exception e) {
                 player.sendMessage("§cAn error occurred while deleting your home.");
@@ -170,14 +174,7 @@ public class HomeManager {
 
         String basePath = "home." + homeName;
 
-        boolean exists = playerConfig.contains(basePath);
-
-        if (exists) {
-            plugin.getLogger().info(String.format("%s has a home set with name '%s'", player.getUniqueId(), homeName));
-        } else {
-            plugin.getLogger().info(player.getUniqueId() + " does not have a home with name '" + homeName + "' set.");
-        }
-        return exists;
+        return playerConfig.contains(basePath);
     }
 
     public boolean confirm(Player player) {
@@ -207,7 +204,7 @@ public class HomeManager {
 
         if (confirmations.containsKey(playerUUID)) {
             confirmations.remove(playerUUID);
-            player.sendMessage("§a✓ Cancelled confirmation request.");
+            player.sendMessage("§a✔ Cancelled confirmation request.");
         } else {
             player.sendMessage("§cNo pending confirmation request.");
         }

@@ -39,7 +39,6 @@ home:
     enable_overwrite_confirm: true
 
   teleport:
-    safe_landing_check: false # checks the home teleport location to make sure the player doesn't take damage on teleport
     delay_seconds: 5
     cooldown_seconds: 10
     cancel_events:
@@ -64,7 +63,7 @@ Permissions are set using a permissions plugin such as luckyperms or you can set
 ```yaml
 main: dev.tallenpeli.serverHomes.ServerHomes
 name: ServerHomes
-version: 1.0.0
+version: 0.0.3-Beta
 api-version: 1.21
 
 commands:
@@ -119,18 +118,9 @@ permissions:
     description: Lists all your homes.
     default: true
 
-  tallenpeli.serverHomes.cooldown.bypass:
-    description: Allows certain players to bypass the teleport cooldown.
+  tallenpeli.serverHomes.vip:
+    description: Allows certain players to bypass teleport restrictions.
     default: op
-  tallenpeli.serverHomes.delay.bypass:
-    description: Allows certain players to bypass the teleport delay (timer).
-    default: op
-  tallenpeli.serverHomes.confirm.bypass:
-    description: Allows certain players to skip all confirmation prompts.
-    default: op
-  tallenpeli.serverHomes.limit.vip:
-    description: Grants the player the higher home limit (max_homes_vip).
-    default: false
 ```
 
 ### Reporting issues/Feature request?

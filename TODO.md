@@ -1,0 +1,1 @@
+- [ ] Implement world detection when teleporting

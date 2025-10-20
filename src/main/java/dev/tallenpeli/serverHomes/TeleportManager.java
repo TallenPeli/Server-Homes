@@ -68,18 +68,21 @@ public class TeleportManager {
             return true;
         }
 
-        List<String> blockedWorlds = config.getStringList("home.admin.blocked_worlds");
-        if (blockedWorlds.contains(destinationWorld.getName())) {
-            player.sendMessage("§cYou cannot teleport to a home in that world.");
-            return true;
-        }
-
-        if(!currentWorld.equals(destinationWorld)) {
-            boolean crossWorldAllowed = config.getBoolean("home.admin.allow_cross_world_teleportation");
-
-            if(!crossWorldAllowed) {
-                player.sendMessage("§cCross-world teleportation is not allowed.");
+        // VIP players bypass teleport restrictions
+        if (!player.hasPermission("tallenpeli.serverHomes.vip")) {
+            List<String> blockedWorlds = config.getStringList("home.admin.blocked_worlds");
+            if (blockedWorlds.contains(destinationWorld.getName())) {
+                player.sendMessage("§cYou cannot teleport to a home in that world.");
                 return true;
+            }
+
+            if(!currentWorld.equals(destinationWorld)) {
+                boolean crossWorldAllowed = config.getBoolean("home.admin.allow_cross_world_teleportation");
+
+                if(!crossWorldAllowed) {
+                    player.sendMessage("§cCross-world teleportation is not allowed.");
+                    return true;
+                }
             }
         }
 
@@ -87,7 +90,7 @@ public class TeleportManager {
         boolean soundsEnabled = config.getBoolean("home.enable_sounds");
 
         BukkitTask teleportTask = new BukkitRunnable() {
-            private int remainingTime = player.hasPermission("tallenpeli.serverHomes.delay.bypass") ? 0 : delayTime;
+            private int remainingTime = player.hasPermission("tallenpeli.serverHomes.vip") ? 0 : delayTime;
             @Override
             public void run() {
                 if (!activeTeleports.containsKey(player.getUniqueId())) {
@@ -101,12 +104,12 @@ public class TeleportManager {
                     this.cancel();
                     activeTeleports.remove(player.getUniqueId());
                     player.teleport(homeLocation);
-                    player.sendMessage(String.format("§a✓ Teleported to §b%s§a!", homeName));
+                    player.sendMessage(String.format("§a✔ Teleported to §b%s§a!", homeName));
                     if (soundsEnabled) {
                         // Call the player.getLocation() again because this location is updated after the teleport.
                         player.playNote(player.getLocation(), Instrument.BELL, new Note(1, Note.Tone.A, false));
                     }
-                    if (player.hasPermission("tallenpeli.serverHomes.cooldown.bypass")) {
+                    if (player.hasPermission("tallenpeli.serverHomes.vip")) {
                         return;
                     }
                     setCooldown(player);
@@ -135,7 +138,7 @@ public class TeleportManager {
     }
 
     private boolean checkCooldown(Player player) {
-        if (player.hasPermission("tallenpeli.serverHomes.cooldown.bypass")) {
+        if (player.hasPermission("tallenpeli.serverHomes.vip")) {
             return false;
         }
 

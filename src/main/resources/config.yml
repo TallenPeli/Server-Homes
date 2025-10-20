@@ -10,7 +10,6 @@ home:
     enable_overwrite_confirm: true
 
   teleport:
-    safe_landing_check: false # checks the home teleport location to make sure the player doesn't take damage on teleport
     delay_seconds: 5
     cooldown_seconds: 10
     cancel_events:
