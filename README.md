@@ -6,8 +6,8 @@
 ### Features
 - Interactive admin tools
 - Configuration file for server admins to tweak settings
-- Colorful text to be more interactive I guess
-- Independently saves player homes in separate configuration files
+- Colorful and interactive text
+- Independently saves player homes in separate (editable) configuration files
 - Smart tab completion
 - Lightweight
 
