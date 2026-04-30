@@ -1,8 +1,7 @@
-A simple Spigot/Paper/Bukkit plugin to add essential home commands to your minecraft server.
-
-Use https://modrinth.com/mod/cardboard to get this working on fabric.
-
 ![Server Homes Banner](https://cdn.modrinth.com/data/cached_images/c4ba370356e8c6fd7e26a2523a69d01e6733d7b2.png)
+> [NOTE] The Homes++ plugin is not associated with this plugin. The author of that plugin stole my icon and used it to gain downloads off my work.
+
+#### A simple Spigot/Paper/Bukkit plugin to add essential home commands to your minecraft server.
 
 ### Features
 - Interactive admin tools
@@ -11,6 +10,8 @@ Use https://modrinth.com/mod/cardboard to get this working on fabric.
 - Independently saves player homes in separate configuration files
 - Smart tab completion
 - Lightweight
+
+![Plugin gameplay demo](https://cdn.modrinth.com/data/ozgBn9Wz/images/ed606e55838ed02551238352c7946c8061b11640.gif)
 
 ### Player Commands
 ```
@@ -28,8 +29,6 @@ Use https://modrinth.com/mod/cardboard to get this working on fabric.
 - /homeadmin tp <player> <home>      // Teleport to a specific home belonging to a player.
 - /homeadmin delhome <player> <home> // Delete a specific home belonging to a player.
 ```
-
-![A screenshot of the plugin's command output](https://cdn.modrinth.com/data/cached_images/13946241bdb680f7b70ae0459e8c6d0ca0ad7687.png)
 
 ### Configuration
 The configuration file is pretty self-explanatory.
