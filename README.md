@@ -23,7 +23,7 @@ Use https://modrinth.com/mod/cardboard to get this working on fabric.
 ```
 
 ### Admin Commands
-```yaml
+```
 - /homeadmin list <player>      // List all homes belonging to a specific player. 
 - /homeadmin tp <player> <home> // Teleport to a specific home belonging to another player.
 ```
