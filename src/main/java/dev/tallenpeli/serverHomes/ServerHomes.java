@@ -6,11 +6,9 @@ import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.Map;
+import java.util.Objects;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
-
-// Add
-// - getPlayerConfig()
 
 public final class ServerHomes extends JavaPlugin {
     public record PendingAction(String commandLabel, String homeName) {
@@ -48,19 +46,23 @@ public final class ServerHomes extends JavaPlugin {
         TeleportManager teleportManager = new TeleportManager(homeManager, this);
 
         HomeTabCompleter tabCompleter = new HomeTabCompleter(homeManager);
-        CommandHandler commandHandler = new CommandHandler(homeManager, teleportManager, this);
+        CommandHandler commandHandler = new CommandHandler(homeManager, teleportManager);
 
         // Register commands
-        this.getCommand("home").setExecutor(commandHandler);
-        this.getCommand("homes").setExecutor(commandHandler);
-        this.getCommand("sethome").setExecutor(commandHandler);
-        this.getCommand("delhome").setExecutor(commandHandler);
-        this.getCommand("confirm").setExecutor(commandHandler);
-        this.getCommand("cancel").setExecutor(commandHandler);
+        Objects.requireNonNull(this.getCommand("home")).setExecutor(commandHandler);
+        Objects.requireNonNull(this.getCommand("homes")).setExecutor(commandHandler);
+        Objects.requireNonNull(this.getCommand("sethome")).setExecutor(commandHandler);
+        Objects.requireNonNull(this.getCommand("delhome")).setExecutor(commandHandler);
+        Objects.requireNonNull(this.getCommand("confirm")).setExecutor(commandHandler);
+        Objects.requireNonNull(this.getCommand("cancel")).setExecutor(commandHandler);
+
+        // Admin command
+        Objects.requireNonNull(this.getCommand("homeadmin")).setExecutor(commandHandler);
 
         // Register tab completers
-        this.getCommand("home").setTabCompleter(tabCompleter);
-        this.getCommand("delhome").setTabCompleter(tabCompleter);
+        Objects.requireNonNull(this.getCommand("home")).setTabCompleter(tabCompleter);
+        Objects.requireNonNull(this.getCommand("delhome")).setTabCompleter(tabCompleter);
+        Objects.requireNonNull(this.getCommand("homeadmin")).setTabCompleter(tabCompleter);
 
         // Register event handlers
         getServer().getPluginManager().registerEvents(new EventListener(this.getConfig()), this);

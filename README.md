@@ -5,12 +5,14 @@ Use https://modrinth.com/mod/cardboard to get this working on fabric.
 ![Server Homes Banner](https://cdn.modrinth.com/data/cached_images/c4ba370356e8c6fd7e26a2523a69d01e6733d7b2.png)
 
 ### Features
+- Interactive admin tools
 - Configuration file for server admins to tweak settings
 - Colorful text to be more interactive I guess
 - Independently saves player homes in seperate configuration files
+- Smart tab completion
 - Lightweight
 
-### Commands
+### Player Commands
 ```
 - /home <home>        // Teleport to a specified home
 - /homes              // List all homes
@@ -18,6 +20,12 @@ Use https://modrinth.com/mod/cardboard to get this working on fabric.
 - /delhome <home>     // Delete a specified home
 - /confirm            // Confirm a delhome or a sethome overwrite.
 - /cancel             // Cancels action
+```
+
+### Admin Commands
+```yaml
+- /homeadmin list <player>      // List all homes belonging to a specific player. 
+- /homeadmin tp <player> <home> // Teleport to a specific home belonging to another player.
 ```
 
 ![A screenshot of the plugin's command output](https://cdn.modrinth.com/data/cached_images/13946241bdb680f7b70ae0459e8c6d0ca0ad7687.png)
@@ -97,6 +105,11 @@ commands:
     usage: /cancel
     permission: tallenpeli.serverHomes.cancel
     permission-message: §cYou don't have permission to use the cancel command!
+  homeadmin:
+    description: Admin command.
+    usage: /homeadmin <options>..
+    permission: tallenpeli.serverHomes.admin
+    permission-message: §cYou don't have permission to use this command! 
 
 permissions:
   tallenpeli.serverHomes.home:
@@ -120,6 +133,9 @@ permissions:
 
   tallenpeli.serverHomes.vip:
     description: Allows certain players to bypass teleport restrictions.
+    default: op
+  tallenpeli.serverHome.admin:
+    description: Administrative permissions for managing player's homes.
     default: op
 ```
 

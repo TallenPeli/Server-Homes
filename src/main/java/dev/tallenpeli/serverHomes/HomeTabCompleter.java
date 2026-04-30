@@ -1,8 +1,11 @@
 package dev.tallenpeli.serverHomes;
 
+import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
+import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -10,6 +13,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class HomeTabCompleter implements TabCompleter {
     private final HomeManager homeManager;
@@ -24,25 +28,57 @@ public class HomeTabCompleter implements TabCompleter {
             return Collections.emptyList();
         }
 
-        String partialName = args[0].toLowerCase();
+        String cmd = command.getName().toLowerCase();
+        String partialInput = args[args.length - 1].toLowerCase();
 
-        if (label.equalsIgnoreCase("home") || label.equalsIgnoreCase("delhome")) {
-            if (args.length == 1) {
-                List<String> allHomes = homeManager.getPlayerHomes(player);
-
-                return allHomes.stream()
-                        .filter(name -> name.toLowerCase().startsWith(partialName))
-                        .collect(Collectors.toList());
+        switch (cmd) {
+            case "home", "delhome" -> {
+                if (args.length == 1) {
+                    return homeManager.getPlayerHomes(player).stream()
+                            .filter(name -> name.toLowerCase().startsWith(partialInput))
+                            .collect(Collectors.toList());
+                }
             }
+            case "sethome" -> {
+                if (args.length == 1) {
+                    return args[0].isEmpty() ? Collections.singletonList("home") : Collections.singletonList(args[0]);
+                }
+            }
+            case "homeadmin" -> {
+                if (args.length == 1) {
+                    return Stream.of("list", "tp")
+                            .filter(s -> s.startsWith(partialInput))
+                            .collect(Collectors.toList());
+                }
 
-        } else if (label.equalsIgnoreCase("sethome")) {
-            if (args[0].isEmpty()) {
-                return Collections.singletonList("home");
-            } else {
-                return Collections.singletonList(args[0]);
+                if (args.length == 2) {
+                    return getOnlinePlayerNames(player, partialInput);
+                }
+
+                if (args.length == 3 && args[0].equalsIgnoreCase("tp")) {
+                    YamlConfiguration targetConfig = homeManager.getConfigFromName(args[1]);
+                    if (targetConfig == null) return Collections.emptyList();
+
+                    ConfigurationSection homeSection = targetConfig.getConfigurationSection("homes");
+                    if (homeSection == null) return Collections.emptyList();
+
+                    return homeSection.getKeys(false).stream()
+                            .filter(home -> home.toLowerCase().startsWith(partialInput))
+                            .collect(Collectors.toList());
+                }
             }
         }
-
         return Collections.emptyList();
+    }
+
+    /**
+     * Helper to get online player names the sender is allowed to see.
+     */
+    private List<String> getOnlinePlayerNames(Player sender, String partialInput) {
+        return Bukkit.getOnlinePlayers().stream()
+                .filter(sender::canSee)
+                .map(Player::getName)
+                .filter(name -> name.toLowerCase().startsWith(partialInput.toLowerCase()))
+                .collect(Collectors.toList());
     }
 }

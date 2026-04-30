@@ -1,6 +1,6 @@
 main: dev.tallenpeli.serverHomes.ServerHomes
 name: ServerHomes
-version: 0.1.3
+version: 2.0.0
 api-version: 26.1
 
 commands:
@@ -34,6 +34,11 @@ commands:
     usage: /cancel
     permission: tallenpeli.serverHomes.cancel
     permission-message: §cYou don't have permission to use the cancel command!
+  homeadmin:
+    description: Admin command.
+    usage: /homeadmin <options>..
+    permission: tallenpeli.serverHomes.admin
+    permission-message: §cYou don't have permission to use this command!
 
 permissions:
   tallenpeli.serverHomes.home:
@@ -57,4 +62,7 @@ permissions:
 
   tallenpeli.serverHomes.vip:
     description: Allows certain players to bypass teleport restrictions.
+    default: op
+  tallenpeli.serverHome.admin:
+    description: Administrative permissions for managing player's homes.
     default: op
