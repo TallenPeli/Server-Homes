@@ -1,5 +1,5 @@
 ![Server Homes Banner](https://cdn.modrinth.com/data/cached_images/c4ba370356e8c6fd7e26a2523a69d01e6733d7b2.png)
-> [NOTE] The Homes++ plugin is not associated with this plugin. The author of that plugin stole my icon and used it to gain downloads off my work.
+> [NOTE] **Homes++** is ***not associated*** with this plugin. The author of that plugin stole my icon and used it to gain downloads off my work.
 
 #### A simple Spigot/Paper/Bukkit plugin to add essential home commands to your minecraft server.
 
