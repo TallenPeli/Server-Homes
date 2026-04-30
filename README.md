@@ -72,7 +72,7 @@ Permissions are set using a permissions plugin such as luckyperms or you can set
 ```yaml
 main: dev.tallenpeli.serverHomes.ServerHomes
 name: ServerHomes
-version: 0.0.3-Beta
+version: 2.0.1
 api-version: 1.21
 
 commands:
