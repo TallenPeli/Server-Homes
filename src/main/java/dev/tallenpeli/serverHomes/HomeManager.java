@@ -12,6 +12,7 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.File;
@@ -30,16 +31,21 @@ public class HomeManager {
     }
 
     private File getPlayerFile(UUID uuid) {
+        if (!playerDataFolder.exists()) {
+            playerDataFolder.mkdirs();
+        }
         return new File(playerDataFolder, uuid.toString() + ".yml");
     }
 
-    private @Nullable YamlConfiguration getPlayerConfig(UUID uuid) {
+    @NotNull
+    private YamlConfiguration getPlayerConfig(UUID uuid) {
         File file = getPlayerFile(uuid);
-        if (!file.exists()) return null;
+
         return YamlConfiguration.loadConfiguration(file);
     }
 
-    @Nullable YamlConfiguration getConfigFromName(String playerName) {
+    @Nullable
+    public YamlConfiguration getConfigFromName(String playerName) {
         if (playerName == null || playerName.isEmpty()) return null;
 
         Player online = Bukkit.getPlayer(playerName);
@@ -90,7 +96,6 @@ public class HomeManager {
 
         String homeBasePath = "homes." + homeName;
 
-        assert playerConfig != null;
         if (playerConfig.contains(homeBasePath) && !isConfirmed) {
             player.sendMessage("§c⚠ A home named §e'" + homeName + "'§c already exists. Type §e/confirm§c to overwrite, §e/cancel§c to cancel.");
             ServerHomes.PendingAction newAction = new ServerHomes.PendingAction("overrideHome", homeName);
@@ -127,7 +132,6 @@ public class HomeManager {
         String basePath = "homes." + homeName;
 
         if (checkHome(player, homeName)) {
-            assert playerConfig != null;
             String worldName = playerConfig.getString(basePath + ".world");
 
             assert worldName != null;
@@ -151,7 +155,6 @@ public class HomeManager {
         }
     }
 
-
     public boolean delHome(Player player, String homeName, Boolean isConfirmed) {
         if (!checkHome(player, homeName)) {
             player.sendMessage(String.format("§cHome §b'%s'§c doesn't exist.", homeName));
@@ -168,12 +171,11 @@ public class HomeManager {
             String basePath = "homes." + homeName;
 
             try {
-                assert playerConfig != null;
                 playerConfig.set(basePath, null);
                 savePlayerConfig(player.getUniqueId(), playerConfig);
                 player.sendMessage(String.format("§a✔ Home §b'%s'§a has been deleted.", homeName));
             } catch (Exception e) {
-                player.sendMessage("§cAn error occurred while deleting your home.");
+                player.sendMessage("§cAn error occurred while deleting home.");
                 return false;
             }
         }
@@ -184,7 +186,6 @@ public class HomeManager {
     public boolean listHomes(Player player) {
         YamlConfiguration playerConfig = getPlayerConfig(player.getUniqueId());
 
-        assert playerConfig != null;
         if (!playerConfig.contains("homes") || Objects.requireNonNull(playerConfig.getConfigurationSection("homes")).getKeys(false).isEmpty()) {
             player.sendMessage("§7No homes set yet. Use §e/sethome§7 to create one.");
             return true;
@@ -193,19 +194,35 @@ public class HomeManager {
         ConfigurationSection homeSection = playerConfig.getConfigurationSection("homes");
         assert homeSection != null;
         player.sendMessage("§8§m                §r §6Your Homes §8§m                ");
-        for (String home : homeSection.getKeys(false)) {
-            player.sendMessage("§e - " + home);
+        for (String homeName : homeSection.getKeys(false)) {
+            double x = homeSection.getDouble(homeName + ".x");
+            double y = homeSection.getDouble(homeName + ".y");
+            double z = homeSection.getDouble(homeName + ".z");
+
+            String world;
+            switch (homeSection.getString(homeName + ".world")) {
+                case "world_nether" -> world = "the_nether";
+                case "world_end" -> world = "the_end";
+                case null, default -> world = "overworld";
+            }
+
+            TextComponent message = new TextComponent("§e - " + homeName + " ");
+
+            String formattedCoords = String.format("§7[%s: %.1f, %.1f, %.1f]", world, x, y, z);
+            TextComponent coords = new TextComponent(formattedCoords);
+
+            String tpCommand = String.format("/home %s", homeName);
+            coords.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, tpCommand));
+            coords.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new Text("§aClick to teleport to " + homeName)));
+
+            player.spigot().sendMessage(message, coords);
         }
         return true;
     }
 
     private boolean checkHome(Player player, String homeName) {
         YamlConfiguration playerConfig = getPlayerConfig(player.getUniqueId());
-
-        String basePath = "homes." + homeName;
-
-        assert playerConfig != null;
-        return playerConfig.contains(basePath);
+        return playerConfig.contains("homes." + homeName);
     }
 
     public boolean confirm(Player player) {
@@ -284,6 +301,27 @@ public class HomeManager {
         }
 
         return true;
+    }
+
+    public boolean adminDeleteHome(Player player, String targetPlayerName, String targetHomeName) {
+        if (targetPlayerName.isEmpty()) {
+            player.sendMessage("§cPlease enter a player's name.");
+            return false;
+        }
+
+        YamlConfiguration targetPlayerConfig = getConfigFromName(targetPlayerName);
+        if (targetPlayerConfig == null) {
+            player.sendMessage("§cCould not find data for player: §e" + targetPlayerName);
+            return false;
+        }
+
+        String path = "homes." + targetHomeName;
+        if (!targetPlayerConfig.contains(path)) {
+            player.sendMessage("§cPlayer §e" + targetPlayerName + "§c has no home named §b'" + targetHomeName + "'§c.");
+            return false;
+        }
+
+        return delHome(Bukkit.getPlayer(targetPlayerName), targetHomeName, true);
     }
 
     public boolean adminHomeTp(Player player, String targetPlayerName, String homeName) {

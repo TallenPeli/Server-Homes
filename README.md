@@ -8,7 +8,7 @@ Use https://modrinth.com/mod/cardboard to get this working on fabric.
 - Interactive admin tools
 - Configuration file for server admins to tweak settings
 - Colorful text to be more interactive I guess
-- Independently saves player homes in seperate configuration files
+- Independently saves player homes in separate configuration files
 - Smart tab completion
 - Lightweight
 
@@ -24,14 +24,15 @@ Use https://modrinth.com/mod/cardboard to get this working on fabric.
 
 ### Admin Commands
 ```
-- /homeadmin list <player>      // List all homes belonging to a specific player. 
-- /homeadmin tp <player> <home> // Teleport to a specific home belonging to another player.
+- /homeadmin list <player>           // List all homes belonging to a specific player. 
+- /homeadmin tp <player> <home>      // Teleport to a specific home belonging to a player.
+- /homeadmin delhome <player> <home> // Delete a specific home belonging to a player.
 ```
 
 ![A screenshot of the plugin's command output](https://cdn.modrinth.com/data/cached_images/13946241bdb680f7b70ae0459e8c6d0ca0ad7687.png)
 
 ### Configuration
-The configuration file is pretty self explanatory.
+The configuration file is pretty self-explanatory.
 
 #### config.yml
 ```yaml
@@ -140,4 +141,4 @@ permissions:
 ```
 
 ### Reporting issues/Feature request?
-Report issues or request features to the Github issue tracker or directly to my inbox at [mail@tallenpeli.dev](mailto:mail@tallenpeli.dev).
+Report issues or request features to the GitHub issue tracker or directly to my inbox at [mail@tallenpeli.dev](mailto:mail@tallenpeli.dev).

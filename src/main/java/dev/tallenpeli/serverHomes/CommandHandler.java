@@ -34,8 +34,8 @@ public class CommandHandler implements CommandExecutor {
 
             if (args.length == 0) {
                 player.sendMessage("§6§lServerHomes Admin Help");
-                player.sendMessage("§e/ha list <player> §7- List homes");
-                player.sendMessage("§e/ha tp <player> <home> §7- Teleport to home");
+                player.sendMessage("§e/homeadmin list <player> §7- List homes");
+                player.sendMessage("§e/homeadmin tp <player> <home> §7- Teleport to home");
                 return true;
             }
 
@@ -44,18 +44,26 @@ public class CommandHandler implements CommandExecutor {
             switch (subCommand) {
                 case "list" -> {
                     if (args.length < 2) {
-                        player.sendMessage("§cUsage: /ha list <player>");
+                        player.sendMessage("§cUsage: /homeadmin list <player>");
                         return true;
                     }
                     return homeManager.adminListHomes(player, args[1]);
                 }
                 case "tp" -> {
                     if (args.length < 3) {
-                        player.sendMessage("§cUsage: /ha tp <player> <home>");
+                        player.sendMessage("§cUsage: /homeadmin tp <player> <home>");
                         return true;
                     }
                     String homeName = String.join(" ", Arrays.copyOfRange(args, 2, args.length));
                     return homeManager.adminHomeTp(player, args[1], homeName);
+                }
+                case "delhome" -> {
+                    if (args.length < 2) {
+                        player.sendMessage("§cUsage: /homeadmin delhome <player> <home>");
+                        return true;
+                    }
+                    String targetHomeName = String.join(" ", Arrays.copyOfRange(args, 2, args.length));
+                    return homeManager.adminDeleteHome(player, args[1], targetHomeName);
                 }
                 default -> {
                     player.sendMessage("§cUnknown sub-command.");

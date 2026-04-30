@@ -46,7 +46,7 @@ public class HomeTabCompleter implements TabCompleter {
             }
             case "homeadmin" -> {
                 if (args.length == 1) {
-                    return Stream.of("list", "tp")
+                    return Stream.of("list", "tp", "delhome")
                             .filter(s -> s.startsWith(partialInput))
                             .collect(Collectors.toList());
                 }
@@ -55,16 +55,18 @@ public class HomeTabCompleter implements TabCompleter {
                     return getOnlinePlayerNames(player, partialInput);
                 }
 
-                if (args.length == 3 && args[0].equalsIgnoreCase("tp")) {
-                    YamlConfiguration targetConfig = homeManager.getConfigFromName(args[1]);
-                    if (targetConfig == null) return Collections.emptyList();
+                if (args.length == 3) {
+                    if (args[0].equalsIgnoreCase("tp") || args[0].equalsIgnoreCase("delhome")) {
+                        YamlConfiguration targetConfig = homeManager.getConfigFromName(args[1]);
+                        if (targetConfig == null) return Collections.emptyList();
 
-                    ConfigurationSection homeSection = targetConfig.getConfigurationSection("homes");
-                    if (homeSection == null) return Collections.emptyList();
+                        ConfigurationSection homeSection = targetConfig.getConfigurationSection("homes");
+                        if (homeSection == null) return Collections.emptyList();
 
-                    return homeSection.getKeys(false).stream()
-                            .filter(home -> home.toLowerCase().startsWith(partialInput))
-                            .collect(Collectors.toList());
+                        return homeSection.getKeys(false).stream()
+                                .filter(home -> home.toLowerCase().startsWith(partialInput))
+                                .collect(Collectors.toList());
+                    }
                 }
             }
         }
