@@ -1,9 +1,9 @@
 ![Server Homes Banner](https://cdn.modrinth.com/data/cached_images/c4ba370356e8c6fd7e26a2523a69d01e6733d7b2.png)
-> [NOTE] **Homes++** is ***not associated*** with this plugin. The author of that plugin stole my icon and used it to gain downloads off my work.
 
 #### A simple Spigot/Paper/Bukkit plugin to add essential home commands to your minecraft server.
 
 ### Features
+
 - Interactive admin tools
 - Configuration file for server admins to tweak settings
 - Colorful and interactive text
@@ -14,6 +14,7 @@
 ![Plugin gameplay demo](https://cdn.modrinth.com/data/ozgBn9Wz/images/ed606e55838ed02551238352c7946c8061b11640.gif)
 
 ### Player Commands
+
 ```
 - /home <home>        // Teleport to a specified home
 - /homes              // List all homes
@@ -24,16 +25,19 @@
 ```
 
 ### Admin Commands
+
 ```
-- /homeadmin list <player>           // List all homes belonging to a specific player. 
+- /homeadmin list <player>           // List all homes belonging to a specific player.
 - /homeadmin tp <player> <home>      // Teleport to a specific home belonging to a player.
 - /homeadmin delhome <player> <home> // Delete a specific home belonging to a player.
 ```
 
 ### Configuration
+
 The configuration file is pretty self-explanatory.
 
 #### config.yml
+
 ```yaml
 home:
   max_homes: 3
@@ -65,9 +69,11 @@ home:
 ```
 
 ### Permissions
+
 Permissions are set using a permissions plugin such as luckyperms or you can set default permissions in `plugin.yml`
 
 #### plugin.yml
+
 ```yaml
 main: dev.tallenpeli.serverHomes.ServerHomes
 name: ServerHomes
@@ -109,7 +115,7 @@ commands:
     description: Admin command.
     usage: /homeadmin <options>..
     permission: tallenpeli.serverHomes.admin
-    permission-message: §cYou don't have permission to use this command! 
+    permission-message: §cYou don't have permission to use this command!
 
 permissions:
   tallenpeli.serverHomes.home:
@@ -140,4 +146,5 @@ permissions:
 ```
 
 ### Reporting issues/Feature request?
+
 Report issues or request features to the GitHub issue tracker or directly to my inbox at [mail@tallenpeli.dev](mailto:mail@tallenpeli.dev).
