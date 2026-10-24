@@ -31,7 +31,7 @@ public class TeleportManager {
         activeTeleports.put(playerUUID, task);
     }
 
-    public TeleportManager(HomeManager homeManager, ServerHomes plugin) {
+    public TeleportManager(ServerHomes plugin, HomeManager homeManager) {
         this.homeManager = homeManager;
         this.plugin = plugin;
         this.config = plugin.getConfig();

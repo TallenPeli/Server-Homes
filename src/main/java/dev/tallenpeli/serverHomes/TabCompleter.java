@@ -3,7 +3,6 @@ package dev.tallenpeli.serverHomes;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
-import org.bukkit.command.TabCompleter;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
@@ -15,11 +14,13 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-public class HomeTabCompleter implements TabCompleter {
+public class TabCompleter implements org.bukkit.command.TabCompleter {
     private final HomeManager homeManager;
+    private final DataManager dataManager;
 
-    public HomeTabCompleter(HomeManager homeManager) {
+    public TabCompleter(HomeManager homeManager, DataManager dataManager) {
         this.homeManager = homeManager;
+        this.dataManager = dataManager;
     }
 
     @Override
@@ -57,7 +58,7 @@ public class HomeTabCompleter implements TabCompleter {
 
                 if (args.length == 3) {
                     if (args[0].equalsIgnoreCase("tp") || args[0].equalsIgnoreCase("delhome")) {
-                        YamlConfiguration targetConfig = homeManager.getConfigFromName(args[1]);
+                        YamlConfiguration targetConfig = dataManager.getConfigFromName(args[1]);
                         if (targetConfig == null) return Collections.emptyList();
 
                         ConfigurationSection homeSection = targetConfig.getConfigurationSection("homes");
@@ -82,5 +83,15 @@ public class HomeTabCompleter implements TabCompleter {
                 .map(Player::getName)
                 .filter(name -> name.toLowerCase().startsWith(partialInput.toLowerCase()))
                 .collect(Collectors.toList());
+    }
+
+    /**
+     * Helper function to get the names of all players who have ever joined the server
+     * @param sender
+     * @param partialInput
+     * @return
+     */
+    private List<String> getAllPlayerNames(Player sender,  String partialInput) {
+        return null;
     }
 }

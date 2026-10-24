@@ -38,15 +38,32 @@ public final class ServerHomes extends JavaPlugin {
         }.runTaskLater(this, confirmationTimeout * 20L);
     }
 
+    private DataManager dataManager;
+    private HomeManager homeManager;
+    private TeleportManager teleportManager;
+
+    private AdminUtils adminUtils;
+
+    private TabCompleter tabCompleter;
+    private CommandHandler commandHandler;
+
+
     @Override
     public void onEnable() {
         this.saveDefaultConfig();
 
-        HomeManager homeManager = new HomeManager(this);
-        TeleportManager teleportManager = new TeleportManager(homeManager, this);
+        this.dataManager = new DataManager(this);
+        this.homeManager = new HomeManager(this, dataManager);
+        this.teleportManager = new TeleportManager(this, homeManager);
 
-        HomeTabCompleter tabCompleter = new HomeTabCompleter(homeManager);
-        CommandHandler commandHandler = new CommandHandler(homeManager, teleportManager);
+        this.adminUtils = new AdminUtils(homeManager, dataManager);
+
+        this.tabCompleter = new TabCompleter(homeManager, dataManager);
+        this.commandHandler = new CommandHandler(homeManager, teleportManager, adminUtils);
+
+        if (!dataManager.loadUserCache()) {
+            this.getLogger().warning("Failed to load user cache.");
+        }
 
         // Register commands
         Objects.requireNonNull(this.getCommand("home")).setExecutor(commandHandler);
@@ -59,7 +76,7 @@ public final class ServerHomes extends JavaPlugin {
         // Admin command
         Objects.requireNonNull(this.getCommand("homeadmin")).setExecutor(commandHandler);
 
-        // Register tab completers
+        // Register tab completions
         Objects.requireNonNull(this.getCommand("home")).setTabCompleter(tabCompleter);
         Objects.requireNonNull(this.getCommand("delhome")).setTabCompleter(tabCompleter);
         Objects.requireNonNull(this.getCommand("homeadmin")).setTabCompleter(tabCompleter);
@@ -70,6 +87,7 @@ public final class ServerHomes extends JavaPlugin {
 
     @Override
     public void onDisable() {
+        if (dataManager != null) dataManager.saveUserCache();
         pendingConfirmations.clear();
     }
 }

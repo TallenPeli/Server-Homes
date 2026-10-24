@@ -11,10 +11,12 @@ import java.util.Arrays;
 public class CommandHandler implements CommandExecutor {
     private final HomeManager homeManager;
     private final TeleportManager teleportManager;
+    private final AdminUtils adminUtils;
 
-    public CommandHandler(HomeManager homeManager, TeleportManager teleportManager) {
+    public CommandHandler(HomeManager homeManager, TeleportManager teleportManager, AdminUtils adminUtils) {
         this.homeManager = homeManager;
         this.teleportManager = teleportManager;
+        this.adminUtils = adminUtils;
     }
 
     @Override
@@ -47,7 +49,7 @@ public class CommandHandler implements CommandExecutor {
                         player.sendMessage("§cUsage: /homeadmin list <player>");
                         return true;
                     }
-                    return homeManager.adminListHomes(player, args[1]);
+                    return adminUtils.listPlayerHomes(player, args[1]);
                 }
                 case "tp" -> {
                     if (args.length < 3) {
@@ -55,7 +57,7 @@ public class CommandHandler implements CommandExecutor {
                         return true;
                     }
                     String homeName = String.join(" ", Arrays.copyOfRange(args, 2, args.length));
-                    return homeManager.adminHomeTp(player, args[1], homeName);
+                    return adminUtils.teleportToPlayerHome(player, args[1], homeName);
                 }
                 case "delhome" -> {
                     if (args.length < 2) {
@@ -63,7 +65,7 @@ public class CommandHandler implements CommandExecutor {
                         return true;
                     }
                     String targetHomeName = String.join(" ", Arrays.copyOfRange(args, 2, args.length));
-                    return homeManager.adminDeleteHome(player, args[1], targetHomeName);
+                    return adminUtils.deletePlayerHome(player, args[1], targetHomeName);
                 }
                 default -> {
                     player.sendMessage("§cUnknown sub-command.");
@@ -76,7 +78,7 @@ public class CommandHandler implements CommandExecutor {
         return switch (cmd) {
             case "homes" -> homeManager.listHomes(player);
             case "sethome" -> homeManager.setHome(player, homeName, false);
-            case "delhome" -> homeManager.delHome(player, homeName, false);
+            case "delhome" -> homeManager.deleteHome(player, homeName, false);
             case "home" -> teleportManager.teleportHome(player, homeName);
             case "confirm" -> homeManager.confirm(player);
             case "cancel" -> homeManager.cancel(player);
